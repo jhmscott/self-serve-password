@@ -1,0 +1,15 @@
+{
+  "name": "self-serve-password",
+  "version": "1.0.0",
+  "description": "Allows users to change their own passwords via a web interface and secure passwords by comparing with a password database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://thanos/jscott/self-serve-password"
+  },
+  "author": "Justin Scott",
+  "license": "ISC"
+}
