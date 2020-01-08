@@ -1,0 +1,6 @@
+#ignore node libraries
+node_modules
+#ignore logs
+logs
+#ignore package lock
+package-lock.json
