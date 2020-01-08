@@ -11,5 +11,15 @@
     "url": "http://thanos/jscott/self-serve-password"
   },
   "author": "Justin Scott",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ad": "^0.3.2",
+    "body-parser": "^1.19.0",
+    "cookie-session": "^1.4.0",
+    "detect-browser": "^4.8.0",
+    "express": "^4.17.1",
+    "mssql": "^6.0.1",
+    "node-mailer": "^0.1.1",
+    "pug": "^2.0.4"
+  }
 }
