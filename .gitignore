@@ -6,3 +6,10 @@ logs
 package-lock.json
 #ignore enviroment variables
 .env
+#ignore public and private keys
+*.pem
+*.crt
+*.cer
+*.keys
+*.req
+*.csr
