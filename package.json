@@ -4,7 +4,7 @@
   "description": "Allows users to change their own passwords via a web interface and secure passwords by comparing with a password database",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -13,11 +13,16 @@
   "author": "Justin Scott",
   "license": "ISC",
   "dependencies": {
+    "activedirectory2": "^1.3.0",
     "ad": "^0.3.2",
+    "axios": "^0.19.1",
     "body-parser": "^1.19.0",
     "cookie-session": "^1.4.0",
     "detect-browser": "^4.8.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jquery": "^3.4.1",
+    "jsonfile": "^5.0.0",
     "mssql": "^6.0.1",
     "node-mailer": "^0.1.1",
     "pug": "^2.0.4"
