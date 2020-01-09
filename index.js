@@ -27,10 +27,15 @@ app.use('/images', express.static('assets/images'));
 app.use('/css', express.static('assets/css'));
 app.use('/js', express.static('assets/js'));
 
-// Route Modules
-const authenticationRoutes = require('./routes/authenticationRoute');
-app.use(authenticationRoutes);
 
 app.get('/', function(req, resp) {
+    console.log('Success');
     resp.render('index');
+});
+
+server.listen(port, function(err) {
+    if (err) {
+        console.log(err);
+    }
+    console.log(`App running on http://localhost:${port}`);
 });
