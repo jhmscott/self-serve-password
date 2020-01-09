@@ -4,3 +4,5 @@ node_modules
 logs
 #ignore package lock
 package-lock.json
+#ignore enviroment variables
+.env
