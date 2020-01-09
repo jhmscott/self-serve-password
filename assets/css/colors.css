@@ -1,0 +1,96 @@
+/* bootstrap button colors
+    primary - #007bff
+    secondary - #868e96
+    success - #28a745
+    danger - #dc3545
+    warning - #ffc107
+    info - #17a2b8
+    light - #f8f9fa
+    dark - #343a40
+*/
+
+/* background-color */
+.bg-white {
+    background-color: rgb(255, 255, 255);
+}
+
+.bg-dark-blue {
+    background-color: rgb(0, 73, 144);
+}
+
+.card-primary-light {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+
+.card-secondary-light {
+    color: #464a4e;
+    background-color: #e7e8ea;
+    border-color: #dddfe2;
+}
+
+.bg-success-light {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.bg-danger-light {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.bg-warning-light {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.bg-info-light {
+    color: rgb(0, 73, 144);
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.bg-light-light {
+    color: #818182;
+    background-color: #fefefe;
+    border-color: #fdfdfe;
+}
+
+.bg-dark-light {
+    color: #1b1e21;
+    background-color: #d6d8d9;
+    border-color: #c6c8ca;
+}
+
+.bg-transparent {
+    background-color: transparent;
+}
+
+.bg-black-tint-75 {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+/* color */
+.smart h3, .smart h6 {
+    color: rgb(0, 0, 0);
+}
+
+.text-dark-blue {
+    color: rgb(0, 73, 144);
+}
+
+.text-white {
+    color: rgb(255, 255, 255);
+}
+
+.text-green {
+    color: #007bff;
+}
+
+.text-red {
+    color: #868e96;
+}
