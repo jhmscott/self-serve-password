@@ -1,14 +1,20 @@
 require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const sql = require('mssql');
-const cookieSession = require('cookie-session');
+
+const express         = require('express');
+const bodyParser      = require('body-parser');
+const sql             = require('mssql');
+const cookieSession   = require('cookie-session');
+const activeDirectory = require('activedirectory2');
+const ping            = require('ping');
+const fs              = require('fs');
 
 // server configurations
-var app = express();
-var http = require('http');
-const server = http.createServer(app); // integrating express with server
-const port = 80;
+var app               = express();
+var http              = require('http');
+const server          = http.createServer(app); // integrating express with server
+const port            = 80;
+
+
 
 app.set('views', [__dirname + '/templates', __dirname + '/templates/temp']);
 app.set('view engine', 'pug');
@@ -29,8 +35,42 @@ app.use('/js', express.static('assets/js'));
 
 
 app.get('/', function(req, resp) {
-    console.log('Success');
-    resp.render('index');
+  const serverSearchConfig = {
+    url: process.env.DC,
+    baseDN: 'ou=Servers,dc=justinlab,dc=ca',
+    port: 636,
+    tlsOptions:{
+        ca: [fs.readFileSync('groot.crt')]
+    },
+    username: process.env.AD_USERNAME,
+    password: process.env.AD_PASSWORD,
+  };
+  const serverSearch = new activeDirectory(serverSearchConfig);
+
+  let servers = [];
+
+  console.log('getting Servers');
+    serverSearch.find('(objectclass=*)', function(err, results) {
+    if ((err) || (! results)) {
+      console.log('ERROR: ' + JSON.stringify(err));
+      resp.render('index',{serverList: servers, status: 'success'});
+    }
+
+    let numHosts = 0;
+
+    results.other.forEach(function(other) {
+      if(other.cn !== undefined) {
+        numHosts++;
+        servers.push({
+          name: other.cn,
+          description: other.description,
+        });
+      }
+    });
+    
+    resp.render('index',{serverList: servers, status: 'success'});
+  });
+  
 });
 
 server.listen(port, function(err) {
@@ -39,3 +79,7 @@ server.listen(port, function(err) {
     }
     console.log(`App running on http://localhost:${port}`);
 });
+
+function getServers() {
+    
+}

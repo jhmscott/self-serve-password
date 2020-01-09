@@ -1,0 +1,16 @@
+doctype html
+html
+    head
+        include inc/header
+        script(src='/js/loading.js')
+    body
+        table
+            h1 Servers
+            tr
+                th Server Name
+                th Description
+            if (status === 'success')
+                each server in serverList
+                    tr
+                        td=server.name
+                        td=server.description
