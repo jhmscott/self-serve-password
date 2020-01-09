@@ -1,0 +1,28 @@
+doctype html
+html
+    head
+        include inc/header
+        script(src='/js/loading.js')
+    body
+        .w-100.h-100.d-flex.align-items-center.justify-content-center
+            .card.p-3
+                .card-body
+                    // Form tag element
+                    form#login.mb-3(method='POST', action='/login-api')
+                        .form-group
+                            // Login Input
+                            label.d-block.text-dark-blue.font-weight-bold.mb-2
+                                i.fa.fa-user.fa-lg.mr-1(aria-hidden='true')
+                                | Username:
+                            .input-group
+                                input.form-control(type='text', required, name='username', aria-label="Employee's username", aria-describedby="username-addon")
+                            // Password input
+                            label.d-block.text-dark-blue.font-weight-bold.mb-2
+                                i.fa.fa-key.fa-lg.mr-1(aria-hidden='true')
+                                | Password:
+                            input.form-control(type='password', required, name='password')
+                        // Submit Button
+                        .text-right
+                            button#login-button.btn.btn-primary(type='submit')
+                                i.fa.fa-sign-in.fa-lg.mr-1(aria-hidden='true')
+                                | Login
