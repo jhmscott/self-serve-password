@@ -79,7 +79,3 @@ server.listen(port, function(err) {
     }
     console.log(`App running on http://localhost:${port}`);
 });
-
-function getServers() {
-    
-}
