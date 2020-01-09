@@ -4,13 +4,21 @@ html
         include inc/header
         script(src='/js/loading.js')
     body
-        table
+        div(class='banner')
+            form(method='GET', action='/login')
+            label(class="title") Justin Lab 
+            button.btn.btn-primary(type='submit')
+                i.fa.fa-key.mr-1(aria-hidden='true')
+                | Login
+        div(class='card')
             h1 Servers
-            tr
-                th Server Name
-                th Description
-            if (status === 'success')
-                each server in serverList
-                    tr
-                        td=server.name
-                        td=server.description
+            table
+                
+                tr
+                    th Server Name
+                    th Description
+                if (status === 'success')
+                    each server in serverList
+                        tr
+                            td=server.name
+                            td=server.description
