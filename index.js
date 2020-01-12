@@ -12,7 +12,7 @@ const fs              = require('fs');
 var app               = express();
 var http              = require('http');
 const server          = http.createServer(app); // integrating express with server
-const port            = 80;
+const port            = process.env.PORT;
 
 
 
