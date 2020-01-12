@@ -29,6 +29,11 @@ app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
+app.use('/images', express.static('assets/images'));
+app.use('/css', express.static('assets/css'));
+app.use('/js', express.static('assets/js'));
+app.use('/fonts', express.static('assets/fonts'));
+app.use('/bootstrap', express.static('assets/bootstrap'));
 
 app.get('/', function(req, resp) {
   const serverSearchConfig = {
