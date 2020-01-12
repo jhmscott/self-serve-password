@@ -1,24 +1,100 @@
 doctype html
-html
-    head
-        include inc/header
-        script(src='/js/loading.js')
-    body
-        div(class='banner')
-            form(method='GET', action='/login')
-            label(class="title") Justin Lab 
-            button.btn.btn-primary(type='submit')
-                i.fa.fa-key.mr-1(aria-hidden='true')
-                | Login
-        div(class='card')
-            h1 Servers
-            table
-                
-                tr
-                    th Server Name
-                    th Description
-                if (status === 'success')
-                    each server in serverList
-                        tr
-                            td=server.name
-                            td=server.description
+| PASTE YOUR HTML CODE HERE
+head
+  meta(charset='utf-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no')
+  title Dashboard - Brand
+  link(rel='stylesheet' href='assets/bootstrap/css/bootstrap.min.css')
+  link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i')
+  link(rel='stylesheet' href='assets/fonts/fontawesome-all.min.css')
+  link(rel='stylesheet' href='assets/fonts/font-awesome.min.css')
+  link(rel='stylesheet' href='assets/fonts/fontawesome5-overrides.min.css')
+#wrapper
+  nav.navbar.navbar-dark.align-items-start.sidebar.sidebar-dark.accordion.bg-gradient-primary.p-0(style='background-color: rgb(55,169,27);color: rgb(255,255,255);')
+    .container-fluid.d-flex.flex-column.p-0
+      a.navbar-brand.d-flex.justify-content-center.align-items-center.sidebar-brand.m-0(href='#')
+        .sidebar-brand-icon.rotate-n-15
+          i.fa.fa-plug
+        .sidebar-brand-text.mx-3
+          span JUSTIN Lab
+      header
+      ul#accordionSidebar.nav.navbar-nav.text-light
+        li.nav-item(role='presentation')
+      .table-responsive
+        table.table
+          thead
+            tr(style='color: rgb(255,255,255);')
+              th Server
+              th Description
+          tbody
+            tr
+            tr
+      .text-center.d-none.d-md-inline
+  #content-wrapper.d-flex.flex-column
+    #content(style='padding: 0px;')
+      nav.navbar.navbar-light.navbar-expand.bg-white.shadow.mb-4.topbar.static-top
+        .container-fluid
+          button#sidebarToggleTop.btn.btn-link.d-md-none.rounded-circle.mr-3(type='button')
+            i.fas.fa-bars
+          form.form-inline.d-none.d-sm-inline-block.mr-auto.ml-md-3.my-2.my-md-0.mw-100.navbar-search
+            .input-group
+              .input-group-append
+          .dropdown
+            a.dropdown-toggle(data-toggle='dropdown' aria-expanded='false' href='#') Login
+            .dropdown-menu(role='menu' style='width: 242px;background-color: rgb(255,255,255);height: 184px;margin: 7px;padding: 16px;')
+              form.form-inline
+                .form-group
+                  label Username
+                input.form-control(type='text')
+                .form-group
+                  label Password
+                input.form-control(type='password')
+                button.btn.btn-primary(type='button') Login
+          ul.nav.navbar-nav.flex-nowrap.ml-auto
+            li.nav-item.dropdown.d-sm-none.no-arrow
+              a.dropdown-toggle.nav-link(data-toggle='dropdown' aria-expanded='false' href='#')
+                i.fas.fa-search
+              .dropdown-menu.dropdown-menu-right.p-3.animated--grow-in(role='menu' aria-labelledby='searchDropdown')
+                form.form-inline.mr-auto.navbar-search.w-100
+                  .input-group
+                    input.bg-light.form-control.border-0.small(type='text' placeholder='Search for ...')
+                    .input-group-append
+                      button.btn.btn-primary.py-0(type='button')
+                        i.fas.fa-search
+            li.nav-item.dropdown.no-arrow.mx-1(role='presentation')
+            li.nav-item.dropdown.no-arrow.mx-1(role='presentation')
+              .shadow.dropdown-list.dropdown-menu.dropdown-menu-right(aria-labelledby='alertsDropdown')
+            li.nav-item.dropdown.no-arrow(role='presentation')
+      .container-fluid(style='padding: 0px;')
+        .d-sm-flex.justify-content-between.align-items-center.mb-4(style='margin: 0px;')
+          h3.text-dark.mb-0(style='padding: 0px 20px;') Account Details
+      form(style='padding: 0px 20px;')
+        .form-group
+          label Email
+          input.form-control(type='email')
+        .form-group
+          label Phone Number
+          input.form-control(type='tel')
+        button.btn.btn-primary(type='button') Update
+      h3.text-dark.mb-0(style='margin: 10px 0px;padding: 10px 20px;') Change Password
+      form(style='padding: 0px 20px;')
+        .form-group
+          label Old Password
+          input.form-control(type='password')
+        .form-group
+          label New Password
+          input.form-control(type='password')
+        .form-group
+          label Confirm New Password
+          input.form-control(type='password')
+        button.btn.btn-primary(type='button') Change
+    footer.bg-white.sticky-footer
+      .container.my-auto
+        .text-center.my-auto.copyright
+          span Copyright &copy; JUSTINLAB&nbsp;2020
+  a.border.rounded.d-inline.scroll-to-top(href='#page-top')
+    i.fas.fa-angle-up
+script(src='assets/js/jquery.min.js')
+script(src='assets/bootstrap/js/bootstrap.min.js')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js')
+script(src='assets/js/theme.js')
