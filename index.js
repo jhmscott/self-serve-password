@@ -29,11 +29,11 @@ app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
-app.use('/images', express.static(__dirname + '/assets/images'));
-app.use('/css', express.static(__dirname + '/assets/css'));
-app.use('/js', express.static(__dirname + '/assets/js'));
-app.use('/fonts', express.static(__dirname + '/assets/fonts'));
-app.use('/bootstrap', express.static(__dirname + '/assets/bootstrap'));
+app.use(express.static('/assets/images'));
+app.use(express.static('/assets/css'));
+app.use(express.static('/assets/js'));
+app.use(express.static('/assets/fonts'));
+app.use(express.static('/assets/bootstrap'));
 
 app.get('/', function(req, resp) {
   const serverSearchConfig = {
