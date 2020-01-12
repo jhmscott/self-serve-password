@@ -32,7 +32,7 @@ app.use(cookieSession({
 app.use('/images', express.static(__dirname + '/assets/images'));
 app.use('/css', express.static(__dirname + '/assets/css'));
 app.use('/js', express.static(__dirname + '/assets/js'));
-app.use('fonts', express.static(__dirname + '/assets/fonts'));
+app.use('/fonts', express.static(__dirname + '/assets/fonts'));
 app.use('/bootstrap', express.static(__dirname + '/assets/bootstrap'));
 
 app.get('/', function(req, resp) {
