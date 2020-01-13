@@ -1,11 +1,15 @@
 #ignore node libraries
 node_modules
+
 #ignore logs
 logs
+
 #ignore package lock
 package-lock.json
+
 #ignore enviroment variables
 .env
+
 #ignore public and private keys
 *.pem
 *.crt
@@ -13,3 +17,6 @@ package-lock.json
 *.keys
 *.req
 *.csr
+
+#ignore bootstrap design files
+*.bsdesign
