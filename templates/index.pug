@@ -19,7 +19,7 @@ head
       header
       ul#accordionSidebar.nav.navbar-nav.text-light
         li.nav-item(role='presentation')
-      .table-responsive
+      //.table-responsive
         table.table
           thead
             tr(style='color: rgb(255,255,255);')
@@ -44,14 +44,16 @@ head
           .dropdown
             a.dropdown-toggle(data-toggle='dropdown' aria-expanded='false' href='#') Login
             .dropdown-menu(role='menu' style='width: 242px;background-color: rgb(255,255,255);height: 184px;margin: 7px;padding: 16px;')
-              form.form-inline
+              form.form-inline(method='POST', action='/login-api')
                 .form-group
                   label Username
                 input.form-control(type='text')
                 .form-group
                   label Password
                 input.form-control(type='password')
-                button.btn.btn-primary(type='button') Login
+                button#login-button.btn.btn-primary(type='submit') 
+                  i.fa.fa-sign-in.fa-lg.mr-1(aria-hidden='true')
+                  |Login
           ul.nav.navbar-nav.flex-nowrap.ml-auto
             li.nav-item.dropdown.d-sm-none.no-arrow
               a.dropdown-toggle.nav-link(data-toggle='dropdown' aria-expanded='false' href='#')

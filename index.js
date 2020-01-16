@@ -20,6 +20,7 @@ app.set('views', [__dirname + '/templates', __dirname + '/templates/temp']);
 app.set('view engine', 'pug');
 app.disable('view cache');
 
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -34,6 +35,9 @@ app.use('/css', express.static(__dirname + '/assets/css'));
 app.use('/js', express.static(__dirname + '/assets/js'));
 app.use('/fonts', express.static(__dirname + '/assets/fonts'));
 app.use('/bootstrap', express.static(__dirname + '/assets/bootstrap'));
+
+const authenticationRoutes = require('./routes/authenticationRoute');
+app.use(authenticationRoutes);
 
 app.get('/', function(req, resp) {
   const serverSearchConfig = {
