@@ -6,11 +6,18 @@ const serverSearchConfig = {
     url: process.env.DC,
     baseDN: 'OU=Standard User Accounts,OU=Lab Users,DC=justinlab,DC=ca',
     port: 636,
-    tlsOptions:{
+    tlsOptions: {
         ca: [fs.readFileSync('groot.crt')]
     },
     username: process.env.AD_USERNAME,
     password: process.env.AD_PASSWORD,
+    attributes: {
+        user: [
+            'diaplayName', 'userPrincipalName',
+            'mail', 'pwdLastSet', 'telephoneNumber',
+            'title', 'thumbnailPhoto'
+        ]
+    }
 };
 
 const ad = new activeDirectory(serverSearchConfig);
@@ -24,11 +31,16 @@ router.post('/login-api', function(req, resp) {
         let username = req.body.username.toLowerCase();
         let password = req.body.password;
 
-        let userEmail;
-        let userPhoneNum;
-        ad.authenticate(username + '@justinlab.ca', password, function(err, auth) {
-            if(auth === true){
-                return resp.render('index',  {login: 'success'});
+        ad.findUser(username, function(err, user){
+            if(!err){
+                ad.authenticate(user.userPrincipalName, password, function(err, auth) {
+                    if(auth === true){
+                        return resp.render('index',  {login: 'success'});
+                    }
+                    else {
+                        return resp.render('index',  {login: 'failed'});
+                    }
+                });
             }
             else {
                 return resp.render('index',  {login: 'failed'});
