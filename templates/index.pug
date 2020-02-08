@@ -77,10 +77,16 @@ head
         form(style='padding: 0px 20px;')
           .form-group
             label Email
-            input.form-control(type='email')
+            if(user && user.mail)
+              input.form-control(type='email', value=user.mail)
+            else
+              input.form-control(type='email')
           .form-group
             label Phone Number
-            input.form-control(type='tel')
+            if(user && user.telephoneNumber)
+              input.form-control(type='tel', value=user.telephoneNumber)
+            else
+              input.form-control(type='tel')
           button.btn.btn-primary(type='button') Update
         h3.text-dark.mb-0(style='margin: 10px 0px;padding: 10px 20px;') Change Password
         form(style='padding: 0px 20px;')

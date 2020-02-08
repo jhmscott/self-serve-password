@@ -35,7 +35,7 @@ router.post('/login-api', function(req, resp) {
             if(!err){
                 ad.authenticate(user.userPrincipalName, password, function(err, auth) {
                     if(auth === true){
-                        return resp.render('index',  {login: 'success'});
+                        return resp.render('index',  {login: 'success', user:  user});
                     }
                     else {
                         return resp.render('index',  {login: 'failed'});
