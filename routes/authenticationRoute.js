@@ -16,23 +16,25 @@ const serverSearchConfig = {
 const ad = new activeDirectory(serverSearchConfig);
 
 router.post('/login-api', function(req, resp) {
-    let username = req.body.username.toLowerCase();
-    let password = req.body.password;
+    
 
-    let userEmail;
-    let userPhoneNum;
-    authentication();
 
-    function authentication() {
-        ad.authenticate(username, password, function(err, auth) {
+    (function authentication() {
+
+        let username = req.body.username.toLowerCase();
+        let password = req.body.password;
+
+        let userEmail;
+        let userPhoneNum;
+        ad.authenticate(username + '@justinlab.ca', password, function(err, auth) {
             if(auth === true){
-
+                return resp.render('index',  {login: 'success'});
             }
             else {
-                return resp.render('index',  {});
+                return resp.render('index',  {login: 'failed'});
             }
         });
-    } 
+    })(); 
 });
 
 module.exports = router;

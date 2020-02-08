@@ -40,6 +40,10 @@ const authenticationRoutes = require('./routes/authenticationRoute');
 app.use(authenticationRoutes);
 
 app.get('/', function(req, resp) {
+    resp.render('index', {login: null});
+});
+
+app.get('/get-servers', function(req, resp) {
   const serverSearchConfig = {
     url: process.env.DC,
     baseDN: 'ou=Servers,dc=justinlab,dc=ca',
@@ -55,27 +59,25 @@ app.get('/', function(req, resp) {
   let servers = [];
 
   console.log('getting Servers');
-    serverSearch.find('(objectclass=*)', function(err, results) {
+  serverSearch.find('(objectclass=*)', function(err, results) {
     if ((err) || (! results)) {
       console.log('ERROR: ' + JSON.stringify(err));
-      resp.render('index',{serverList: servers, status: 'success'});
+      resp.send({serverList: servers, status: 'failed'});
     }
-
-    let numHosts = 0;
-
-    results.other.forEach(function(other) {
-      if(other.cn !== undefined) {
-        numHosts++;
-        servers.push({
-          name: other.cn,
-          description: other.description,
-        });
-      }
-    });
-    
-    resp.render('index',{serverList: servers, status: 'success'});
+    else{
+      results.other.forEach(function(other) {
+        if(other.cn !== undefined) {
+          numHosts++;
+          servers.push({
+            name: other.cn,
+            description: other.description,
+          });
+        }
+      });
+      
+      resp.send({serverList: servers, status: 'success'});
+    }
   });
-  
 });
 
 server.listen(port, function(err) {

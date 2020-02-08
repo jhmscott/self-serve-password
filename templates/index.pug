@@ -47,10 +47,10 @@ head
               form.form-inline(method='POST', action='/login-api')
                 .form-group
                   label Username
-                input.form-control(type='text')
+                input.form-control(type='text', required, name='username')
                 .form-group
                   label Password
-                input.form-control(type='password')
+                input.form-control(type='password', required, name='password')
                 button#login-button.btn.btn-primary(type='submit') 
                   i.fa.fa-sign-in.fa-lg.mr-1(aria-hidden='true')
                   |Login
@@ -69,29 +69,35 @@ head
             li.nav-item.dropdown.no-arrow.mx-1(role='presentation')
               .shadow.dropdown-list.dropdown-menu.dropdown-menu-right(aria-labelledby='alertsDropdown')
             li.nav-item.dropdown.no-arrow(role='presentation')
-      .container-fluid(style='padding: 0px;')
-        .d-sm-flex.justify-content-between.align-items-center.mb-4(style='margin: 0px;')
-          h3.text-dark.mb-0(style='padding: 0px 20px;') Account Details
-      form(style='padding: 0px 20px;')
-        .form-group
-          label Email
-          input.form-control(type='email')
-        .form-group
-          label Phone Number
-          input.form-control(type='tel')
-        button.btn.btn-primary(type='button') Update
-      h3.text-dark.mb-0(style='margin: 10px 0px;padding: 10px 20px;') Change Password
-      form(style='padding: 0px 20px;')
-        .form-group
-          label Old Password
-          input.form-control(type='password')
-        .form-group
-          label New Password
-          input.form-control(type='password')
-        .form-group
-          label Confirm New Password
-          input.form-control(type='password')
-        button.btn.btn-primary(type='button') Change
+      
+      if(login === 'success')
+        .container-fluid(style='padding: 0px;')
+          .d-sm-flex.justify-content-between.align-items-center.mb-4(style='margin: 0px;')
+            h3.text-dark.mb-0(style='padding: 0px 20px;') Account Details
+        form(style='padding: 0px 20px;')
+          .form-group
+            label Email
+            input.form-control(type='email')
+          .form-group
+            label Phone Number
+            input.form-control(type='tel')
+          button.btn.btn-primary(type='button') Update
+        h3.text-dark.mb-0(style='margin: 10px 0px;padding: 10px 20px;') Change Password
+        form(style='padding: 0px 20px;')
+          .form-group
+            label Old Password
+            input.form-control(type='password')
+          .form-group
+            label New Password
+            input.form-control(type='password')
+          .form-group
+            label Confirm New Password
+            input.form-control(type='password')
+          button.btn.btn-primary(type='button') Change
+      else if(login === 'failed')
+        #login-error.alert.alert-danger.font-weight-bold(role='alert')
+          i.fa.fa-exclamation-circle.fa-lg.mr-1(aria-hidden='true')
+            | Login Failed
     footer.bg-white.sticky-footer
       .container.my-auto
         .text-center.my-auto.copyright
