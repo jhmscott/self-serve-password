@@ -46,10 +46,10 @@ app.get('/', function(req, resp) {
 app.get('/get-servers', function(req, resp) {
   const serverSearchConfig = {
     url: process.env.DC,
-    baseDN: 'ou=Servers,dc=justinlab,dc=ca',
+    baseDN: process.env.SERVER_OU,
     port: 636,
     tlsOptions:{
-        ca: [fs.readFileSync('groot.crt')]
+        ca: [fs.readFileSync(process.env.CA_CRT)]
     },
     username: process.env.AD_USERNAME,
     password: process.env.AD_PASSWORD,
@@ -89,7 +89,7 @@ app.get('/get-servers', function(req, resp) {
         servers[i].isAlive = (await ping.promise.probe(servers[i].name)).alive;
         console.log(servers[i]);
       }
-      
+
       resp.send({serverList: servers, status: 'success'});
     }
   });

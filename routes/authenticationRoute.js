@@ -1,13 +1,13 @@
-const router = require('express').Router();
-const activeDirectory = require('activedirectory2');
-const fs              = require('fs');
+const router            = require('express').Router();
+const activeDirectory   = require('activedirectory2');
+const fs                = require('fs');
 
 const serverSearchConfig = {
     url: process.env.DC,
-    baseDN: 'OU=Standard User Accounts,OU=Lab Users,DC=justinlab,DC=ca',
+    baseDN: process.env.USER_OU,
     port: 636,
     tlsOptions: {
-        ca: [fs.readFileSync('groot.crt')]
+        ca: [fs.readFileSync(process.env.CA_CRT)]
     },
     username: process.env.AD_USERNAME,
     password: process.env.AD_PASSWORD,
