@@ -57,9 +57,10 @@ app.get('/get-servers', function(req, resp) {
   const serverSearch = new activeDirectory(serverSearchConfig);
 
   let servers = [];
+  let numHosts = 0;
 
   console.log('getting Servers');
-  serverSearch.find('(objectclass=*)', function(err, results) {
+  serverSearch.find('(objectclass=*)', async function(err, results) {
     if ((err) || (! results)) {
       console.log('ERROR: ' + JSON.stringify(err));
       resp.send({serverList: servers, status: 'failed'});
@@ -67,13 +68,27 @@ app.get('/get-servers', function(req, resp) {
     else{
       results.other.forEach(function(other) {
         if(other.cn !== undefined) {
-          numHosts++;
           servers.push({
             name: other.cn,
             description: other.description,
+            isAlive: null
           });
         }
       });
+      
+      servers.sort(function(serverA,serverB){
+        if(serverA.name > serverB.name) {
+          return 1;
+        }
+        else {
+          return -1;
+        }
+      });
+
+      for(let i = 0; i < servers.length; i++) {
+        servers[i].isAlive = (await ping.promise.probe(servers[i].name)).alive;
+        console.log(servers[i]);
+      }
       
       resp.send({serverList: servers, status: 'success'});
     }
