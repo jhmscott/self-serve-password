@@ -7,6 +7,7 @@ const cookieSession   = require('cookie-session');
 const activeDirectory = require('activedirectory2');
 const ping            = require('ping');
 const fs              = require('fs');
+const buffer          = require('buffer/').Buffer;
 
 // server configurations
 var app               = express();
@@ -43,6 +44,41 @@ app.get('/', function(req, resp) {
   }
   else{
     resp.render('index', {login: null});
+  }
+});
+
+app.get('/profile', function(req, resp){
+  const photoSearchConfig = {
+    url: process.env.DC,
+    baseDN: process.env.USER_OU,
+    port: 636,
+    tlsOptions: {
+        ca: [fs.readFileSync(process.env.CA_CRT)]
+    },
+    username: process.env.AD_USERNAME,
+    password: process.env.AD_PASSWORD,
+    attributes: {
+        user: [
+            'thumbnailPhoto'
+        ]
+    }
+  };
+
+  const ad = new activeDirectory(photoSearchConfig);
+
+  if(req.session.auth){
+    ad.findUser(req.session.user.userPrincipalName, function(err, user) {
+      if(!err) {
+        resp.send({status: 'success', photo: 'data:image/jpeg;base64,' + buffer.from(user.thumbnailPhoto).toString('base64')});
+      }
+      else {
+        resp.send({status: 'fail'});
+      }
+    });
+    
+  }
+  else {
+    resp.send({status: 'fail'});
   }
 });
 

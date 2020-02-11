@@ -15,4 +15,12 @@ $(document).ready(function() {
             });
         }
     });
+    $.ajax({
+        url: '/profile',
+        method: 'GET',
+        success: function(resp) {
+            console.log(resp.photo);
+            document.getElementById("profile-pic").src = resp.photo;
+        }
+    });
 })

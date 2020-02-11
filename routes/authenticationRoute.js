@@ -2,7 +2,7 @@ const router            = require('express').Router();
 const activeDirectory   = require('activedirectory2');
 const fs                = require('fs');
 
-const serverSearchConfig = {
+const userSearchConfig = {
     url: process.env.DC,
     baseDN: process.env.USER_OU,
     port: 636,
@@ -20,7 +20,7 @@ const serverSearchConfig = {
     }
 };
 
-const ad = new activeDirectory(serverSearchConfig);
+const ad = new activeDirectory(userSearchConfig);
 
 router.post('/login-api', function(req, resp) {
     
