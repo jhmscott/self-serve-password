@@ -68,7 +68,7 @@ app.get('/profile', function(req, resp){
 
   if(req.session.auth){
     ad.findUser(req.session.user.userPrincipalName, function(err, user) {
-      if(!err) {
+      if(!err && user.thumbnailPhoto) {
         resp.send({status: 'success', photo: 'data:image/jpeg;base64,' + buffer.from(user.thumbnailPhoto).toString('base64')});
       }
       else {

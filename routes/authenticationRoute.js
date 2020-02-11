@@ -86,7 +86,7 @@ router.post('/change-pass', function(req, resp) {
                             });
                         }
                         else {
-                            resp.send({status: 'fail', message: 'Insecure Password'});
+                            resp.send({status: 'fail', message: 'Leaked Password'});
                         }
                     });
                     
@@ -109,20 +109,18 @@ function isPasswordSafe(password, callback) {
     
     https.get('https://api.pwnedpasswords.com/range/' + passwordHash.substring(0,5), function(resp){
         let data = '';
-        let passwordHashes;
+        let returnedHashes;
         let i = 0;
 
         resp.on('data', function(chunk) {
             data += chunk;
         });
 
-        
-
         resp.on('end', function() {
             returnedHashes = data.split('\r\n');
             returnedHashes.forEach(function(returnedHash) {
-                console.log(returnedHash.split(':')[0]);
-                if(returnedHash.split(':')[0] === passwordHash) {
+                if(returnedHash.split(':')[0].toLowerCase() === passwordHash.substring(5,40)) {
+                    console.log('Found Password');
                     callback(false);
                     return;
                 }

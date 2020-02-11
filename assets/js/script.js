@@ -34,7 +34,7 @@ $(document).ready(function() {
             success: function(resp) {
                 if (resp.status === 'success') {
                     swal({
-                        title: 'Password Changed!',
+                        title: 'Success',
                         text: 'Password Changed!',
                         allowOutsideClick: false
                     }).then(function(){ 
@@ -44,7 +44,7 @@ $(document).ready(function() {
                 } 
                 else if (resp.status === 'fail') {
                     swal({
-                        title: resp.message, 
+                        title: 'Failed', 
                         text: resp.message,
                         type: 'error',
                         allowOutsideClick: false
