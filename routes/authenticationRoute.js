@@ -1,6 +1,9 @@
 const router            = require('express').Router();
 const activeDirectory   = require('activedirectory2');
 const fs                = require('fs');
+const pwChange          = require('ad');
+const https             = require('https');
+const sha1              = require('sha1');
 
 const userSearchConfig = {
     url: process.env.DC,
@@ -59,16 +62,35 @@ router.post('/logout', function(req, resp) {
 
 router.post('/change-pass', function(req, resp) {
     (function() {
+        const pw = new pwChange({
+            url: process.env.DC,
+            user: process.env.AD_USERNAME,
+            pass: process.env.AD_PASSWORD
+        });
         let username, oldPass, newPass, confirmPass;
         username    = req.session.user.userPrincipalName;
         oldPass     = req.body.oldPass;
         newPass     = req.body.newPass;
         confirmPass = req.body.confirmPass;
 
-        ad.authenticate(username, oldPass, function(err, auth) {
+        ad.authenticate(username, oldPass, async function(err, auth) {
             if(auth) {
                 if(newPass === confirmPass) {
-                    resp.send({status: 'success'});
+                    isPasswordSafe(newPass, function(isSafe) {
+                        if(isSafe) {
+                            pw.user(username).password(newPass).then(function() {
+                                resp.send({status: 'success'});
+                            }).catch(function(err) {
+                                console.log(err);
+                                resp.send({status: 'fail', message: 'Does not meet complexity requirements'});
+                            });
+                        }
+                        else {
+                            resp.send({status: 'fail', message: 'Insecure Password'});
+                        }
+                    });
+                    
+                    
                 }
                 else {
                     resp.send({status: 'fail', message: "Password Don't Match"});
@@ -81,5 +103,33 @@ router.post('/change-pass', function(req, resp) {
 
     })();
 });
+
+function isPasswordSafe(password, callback) {
+    passwordHash = sha1(password);
+    
+    https.get('https://api.pwnedpasswords.com/range/' + passwordHash.substring(0,5), function(resp){
+        let data = '';
+        let passwordHashes;
+        let i = 0;
+
+        resp.on('data', function(chunk) {
+            data += chunk;
+        });
+
+        
+
+        resp.on('end', function() {
+            returnedHashes = data.split('\r\n');
+            returnedHashes.forEach(function(returnedHash) {
+                console.log(returnedHash.split(':')[0]);
+                if(returnedHash.split(':')[0] === passwordHash) {
+                    callback(false);
+                    return;
+                }
+            });
+            callback(true);
+        });
+    });
+}
 
 module.exports = router;
