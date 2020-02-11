@@ -13,9 +13,9 @@ const serverSearchConfig = {
     password: process.env.AD_PASSWORD,
     attributes: {
         user: [
-            'diaplayName', 'userPrincipalName',
+            'displayName', 'userPrincipalName',
             'mail', 'pwdLastSet', 'telephoneNumber',
-            'title', 'thumbnailPhoto'
+            'title'
         ]
     }
 };
@@ -35,7 +35,9 @@ router.post('/login-api', function(req, resp) {
             if(!err){
                 ad.authenticate(user.userPrincipalName, password, function(err, auth) {
                     if(auth === true){
-                        return resp.render('index',  {login: 'success', user:  user});
+                        req.session.auth = true;
+                        req.session.user = user;
+                        return resp.redirect('/');
                     }
                     else {
                         return resp.render('index',  {login: 'failed'});
@@ -47,6 +49,12 @@ router.post('/login-api', function(req, resp) {
             }
         });
     })(); 
+});
+
+router.post('/logout', function(req, resp){
+    req.session.auth=false;
+    req.session.user=null;
+    resp.redirect('/');
 });
 
 module.exports = router;

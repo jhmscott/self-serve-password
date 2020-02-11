@@ -39,18 +39,31 @@ head
             .input-group
               .input-group-append
           .dropdown
-            a.dropdown-toggle(data-toggle='dropdown' aria-expanded='false' href='#') Login
+            if(login === 'success')
+              | #{user.displayName}
+            else
+              | Login
+            a.dropdown-toggle(data-toggle='dropdown' aria-expanded='false' href='#') 
             .dropdown-menu(role='menu' style='width: 242px;background-color: rgb(255,255,255);height: 184px;margin: 7px;padding: 16px;')
-              form.form-inline(method='POST', action='/login-api')
-                .form-group
-                  label Username
-                input.form-control(type='text', required, name='username')
-                .form-group
-                  label Password
-                input.form-control(type='password', required, name='password')
-                button#login-button.btn.btn-primary(type='submit') 
-                  i.fa.fa-sign-in.fa-lg.mr-1(aria-hidden='true')
-                  |Login
+              if(login === 'success')
+                form.form-inline(method='POST', action='/logout')
+                  | #{user.displayName}
+                  br
+                  | #{user.title}
+                  button#login-button.btn.btn-primary(type='submit') 
+                    i.fa.fa-sign-in.fa-lg.mr-1(aria-hidden='true')
+                    | Logout
+              else
+                form.form-inline(method='POST', action='/login-api')
+                  .form-group
+                    label Username
+                  input.form-control(type='text', required, name='username')
+                  .form-group
+                    label Password
+                  input.form-control(type='password', required, name='password')
+                  button#login-button.btn.btn-primary(type='submit') 
+                    i.fa.fa-sign-in.fa-lg.mr-1(aria-hidden='true')
+                    |Login
           ul.nav.navbar-nav.flex-nowrap.ml-auto
             li.nav-item.dropdown.d-sm-none.no-arrow
               a.dropdown-toggle.nav-link(data-toggle='dropdown' aria-expanded='false' href='#')

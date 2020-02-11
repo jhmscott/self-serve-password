@@ -14,12 +14,9 @@ var http              = require('http');
 const server          = http.createServer(app); // integrating express with server
 const port            = process.env.PORT;
 
-
-
 app.set('views', [__dirname + '/templates', __dirname + '/templates/temp']);
 app.set('view engine', 'pug');
 app.disable('view cache');
-
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -40,7 +37,13 @@ const authenticationRoutes = require('./routes/authenticationRoute');
 app.use(authenticationRoutes);
 
 app.get('/', function(req, resp) {
+  console.log(req.session);
+  if(req.session.auth) {
+    resp.render('index',  {login: 'success', user:  req.session.user})
+  }
+  else{
     resp.render('index', {login: null});
+  }
 });
 
 app.get('/get-servers', function(req, resp) {
@@ -60,6 +63,7 @@ app.get('/get-servers', function(req, resp) {
   let numHosts = 0;
 
   console.log('getting Servers');
+
   serverSearch.find('(objectclass=*)', async function(err, results) {
     if ((err) || (! results)) {
       console.log('ERROR: ' + JSON.stringify(err));
