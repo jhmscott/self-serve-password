@@ -92,28 +92,28 @@ head
           .form-group
             label Email
             if(user && user.mail)
-              input.form-control(type='email', value=user.mail)
+              input.form-control(type='email', value=user.mail, name='email')
             else
-              input.form-control(type='email')
+              input.form-control(type='email', name='email')
           .form-group
             label Phone Number
             if(user && user.telephoneNumber)
-              input.form-control(type='tel', value=user.telephoneNumber)
+              input.form-control(type='tel', value=user.telephoneNumber, name='phone')
             else
-              input.form-control(type='tel')
+              input.form-control(type='tel', name='phone')
           button.btn.btn-primary(type='button') Update
         h3.text-dark.mb-0(style='margin: 10px 0px;padding: 10px 20px;') Change Password
-        form(style='padding: 0px 20px;')
+        form#change-pass(method='POST', action='/change-pass',style='padding: 0px 20px;')
           .form-group
             label Old Password
-            input.form-control(type='password')
+            input.form-control(type='password', name='oldPass')
           .form-group
             label New Password
-            input.form-control(type='password')
+            input.form-control(type='password', name='newPass')
           .form-group
             label Confirm New Password
-            input.form-control(type='password')
-          button.btn.btn-primary(type='button') Change
+            input.form-control(type='password', name='confirmPass')
+          button.btn.btn-primary(type='submit') Change
       else if(login === 'failed')
         #login-error.alert.alert-danger.font-weight-bold(role='alert')
           i.fa.fa-exclamation-circle.fa-lg.mr-1(aria-hidden='true')
@@ -127,5 +127,6 @@ head
 script(src='/js/jquery.min.js')
 script(src='/bootstrap/js/bootstrap.min.js')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js')
+script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.6/sweetalert2.all.min.js')
 script(src='/js/theme.js')
 script(src='/js/script.js')

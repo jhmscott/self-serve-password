@@ -26,7 +26,7 @@ router.post('/login-api', function(req, resp) {
     
 
 
-    (function authentication() {
+    (function() {
 
         let username = req.body.username.toLowerCase();
         let password = req.body.password;
@@ -34,7 +34,7 @@ router.post('/login-api', function(req, resp) {
         ad.findUser(username, function(err, user){
             if(!err){
                 ad.authenticate(user.userPrincipalName, password, function(err, auth) {
-                    if(auth === true){
+                    if(auth){
                         req.session.auth = true;
                         req.session.user = user;
                         return resp.redirect('/');
@@ -51,10 +51,35 @@ router.post('/login-api', function(req, resp) {
     })(); 
 });
 
-router.post('/logout', function(req, resp){
+router.post('/logout', function(req, resp) {
     req.session.auth=false;
     req.session.user=null;
     resp.redirect('/');
+});
+
+router.post('/change-pass', function(req, resp) {
+    (function() {
+        let username, oldPass, newPass, confirmPass;
+        username    = req.session.user.userPrincipalName;
+        oldPass     = req.body.oldPass;
+        newPass     = req.body.newPass;
+        confirmPass = req.body.confirmPass;
+
+        ad.authenticate(username, oldPass, function(err, auth) {
+            if(auth) {
+                if(newPass === confirmPass) {
+                    resp.send({status: 'success'});
+                }
+                else {
+                    resp.send({status: 'fail', message: "Password Don't Match"});
+                }
+            }
+            else {
+                resp.send({status: 'fail', message: 'Old Password Incorrect'});
+            }
+        });
+
+    })();
 });
 
 module.exports = router;

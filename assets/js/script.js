@@ -23,4 +23,37 @@ $(document).ready(function() {
             document.getElementById("profile-pic").src = resp.photo;
         }
     });
-})
+
+    $('#change-pass').submit(function(e){
+        e.preventDefault();
+        console.log('Changing Password');
+        $.ajax({
+            url: '/change-pass',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(resp) {
+                if (resp.status === 'success') {
+                    swal({
+                        title: 'Password Changed!',
+                        text: 'Password Changed!',
+                        allowOutsideClick: false
+                    }).then(function(){ 
+                        location.reload();
+                    });
+
+                } 
+                else if (resp.status === 'fail') {
+                    swal({
+                        title: resp.message, 
+                        text: resp.message,
+                        type: 'error',
+                        allowOutsideClick: false
+                    }).then(function(){ 
+                        location.reload();
+                    });
+
+                }
+            }
+        });
+    });
+});
