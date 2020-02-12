@@ -82,12 +82,13 @@ app.get('/profile', function(req, resp){
   }
 });
 
+
 app.get('/get-servers', function(req, resp) {
   const serverSearchConfig = {
     url: process.env.DC,
     baseDN: process.env.SERVER_OU,
     port: 636,
-    tlsOptions:{
+    tlsOptions: {
         ca: [fs.readFileSync(process.env.CA_CRT)]
     },
     username: process.env.AD_USERNAME,

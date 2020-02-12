@@ -85,23 +85,6 @@ head
             li.nav-item.dropdown.no-arrow(role='presentation')
       
       if(login === 'success')
-        .container-fluid(style='padding: 0px;')
-          .d-sm-flex.justify-content-between.align-items-center.mb-4(style='margin: 0px;')
-            h3.text-dark.mb-0(style='padding: 0px 20px;') Account Details
-        form(style='padding: 0px 20px;')
-          .form-group
-            label Email
-            if(user && user.mail)
-              input.form-control(type='email', value=user.mail, name='email')
-            else
-              input.form-control(type='email', name='email')
-          .form-group
-            label Phone Number
-            if(user && user.telephoneNumber)
-              input.form-control(type='tel', value=user.telephoneNumber, name='phone')
-            else
-              input.form-control(type='tel', name='phone')
-          button.btn.btn-primary(type='button') Update
         h3.text-dark.mb-0(style='margin: 10px 0px;padding: 10px 20px;') Change Password
         form#change-pass(method='POST', action='/change-pass',style='padding: 0px 20px;')
           .form-group
@@ -114,7 +97,7 @@ head
             label Confirm New Password
             input.form-control(type='password', name='confirmPass')
           button.btn.btn-primary(type='submit') Change
-      else if(login === 'failed')
+      if(login === 'failed')
         #login-error.alert.alert-danger.font-weight-bold(role='alert')
           i.fa.fa-exclamation-circle.fa-lg.mr-1(aria-hidden='true')
             | Login Failed
