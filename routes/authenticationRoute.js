@@ -26,13 +26,10 @@ const userSearchConfig = {
 const ad = new activeDirectory(userSearchConfig);
 
 router.post('/login-api', function(req, resp) {
-    
-
-
     (function() {
-
-        let username = req.body.username.toLowerCase();
-        let password = req.body.password;
+        let username, password;
+        username = req.body.username.toLowerCase();
+        password = req.body.password;
 
         ad.findUser(username, function(err, user){
             if(!err){
@@ -105,12 +102,10 @@ router.post('/change-pass', function(req, resp) {
 });
 
 function isPasswordSafe(password, callback) {
-    passwordHash = sha1(password);
+    let passwordHash = sha1(password);
     
     https.get('https://api.pwnedpasswords.com/range/' + passwordHash.substring(0,5), function(resp){
-        let data = '';
-        let returnedHashes;
-        let i = 0;
+        let returnedHashes, data = '';
 
         resp.on('data', function(chunk) {
             data += chunk;
