@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const express         = require('express');
 const bodyParser      = require('body-parser');
-const sql             = require('mssql');
 const cookieSession   = require('cookie-session');
 const activeDirectory = require('activedirectory2');
 const ping            = require('ping');

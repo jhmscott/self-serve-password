@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://thanos/jscott/self-serve-password"
+    "url": "https://github.com/jhmscott/self-serve-password.git"
   },
   "author": "Justin Scott",
   "license": "ISC",
