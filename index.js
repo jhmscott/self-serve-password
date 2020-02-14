@@ -1,5 +1,19 @@
+/**
+ * Copyright (c) 2020
+ *
+ * Node.JS Backend for non authentication related 
+ * routes. 
+ *
+ * @summary Non auth related routes
+ * @author Justin Scott <justinhmscott@gmail.com>
+ *
+ * Created at     : ‎2020-01-08 ‏‎13:02:25 
+ * Last modified  : 2020-02-14 15:32:47
+ */
+
 require('dotenv').config();
 
+//module imports
 const express         = require('express');
 const bodyParser      = require('body-parser');
 const cookieSession   = require('cookie-session');
@@ -27,6 +41,7 @@ app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
+//setup static mappings for assets
 app.use('/images', express.static(__dirname + '/assets/images'));
 app.use('/css', express.static(__dirname + '/assets/css'));
 app.use('/js', express.static(__dirname + '/assets/js'));
@@ -36,8 +51,9 @@ app.use('/bootstrap', express.static(__dirname + '/assets/bootstrap'));
 const authenticationRoutes = require('./routes/authenticationRoute');
 app.use(authenticationRoutes);
 
+//main page
 app.get('/', function(req, resp) {
-  console.log(req.session);
+  //if user is logged in display option to change password
   if(req.session.auth) {
     resp.render('index',  {login: 'success', user:  req.session.user})
   }
@@ -46,6 +62,7 @@ app.get('/', function(req, resp) {
   }
 });
 
+//get profile picture from active directory
 app.get('/profile', function(req, resp){
   const photoSearchConfig = {
     url: process.env.DC,
@@ -65,23 +82,25 @@ app.get('/profile', function(req, resp){
 
   const ad = new activeDirectory(photoSearchConfig);
 
+  //check if user is logged in firsy
   if(req.session.auth){
+    //search for user by UPN stored in cookie
     ad.findUser(req.session.user.userPrincipalName, function(err, user) {
       if(!err) {
+        //convert string from AD to a format that can be displayed in HTML
         resp.send({status: 'success', photo: user.thumbnailPhoto ? ('data:image/jpeg;base64,' + buffer.from(user.thumbnailPhoto).toString('base64')) : '/images/default.jpg'});
       }
       else {
         resp.send({status: 'fail'});
       }
     });
-    
   }
   else {
     resp.send({status: 'fail'});
   }
 });
 
-
+//Get a list of the servers in the server OU of AD
 app.get('/get-servers', function(req, resp) {
   const serverSearchConfig = {
     url: process.env.DC,
@@ -100,13 +119,16 @@ app.get('/get-servers', function(req, resp) {
 
   console.log('getting Servers');
 
+  //search for all objects in the OU
   serverSearch.find('(objectclass=*)', async function(err, results) {
     if ((err) || (! results)) {
       console.log('ERROR: ' + JSON.stringify(err));
       resp.send({serverList: servers, status: 'failed'});
     }
     else{
+      //Iterate through the objects 
       results.other.forEach(function(other) {
+        //if the common name is defined, add it to the array
         if(other.cn !== undefined) {
           servers.push({
             name: other.cn,
@@ -116,6 +138,7 @@ app.get('/get-servers', function(req, resp) {
         }
       });
       
+      //sort server alphabetically
       servers.sort(function(serverA,serverB){
         if(serverA.name > serverB.name) {
           return 1;
@@ -125,11 +148,14 @@ app.get('/get-servers', function(req, resp) {
         }
       });
 
+      //ping each server to see if it's online
       for(let i = 0; i < servers.length; i++) {
+        //wait for the response before moving to the next
         servers[i].isAlive = (await ping.promise.probe(servers[i].name)).alive;
         console.log(servers[i]);
       }
 
+      //return the list of servers
       resp.send({serverList: servers, status: 'success'});
     }
   });
