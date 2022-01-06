@@ -36,7 +36,7 @@ const userSearchConfig = {
         user: [
             'displayName', 'userPrincipalName',
             'mail', 'pwdLastSet', 'telephoneNumber',
-            'title'
+            'title', 'loginShell'
         ]
     }
 };
@@ -142,7 +142,7 @@ router.get ('/kerberos', function (req, res) {
     }
     else
     {
-        kerberos.initializeServer (`HTTP@${process.env.DOMAIN}`, function (err, server) {
+        kerberos.initializeServer (`HTTP@${process.env.HOST}`, function (err, server) {
             if (err)
             {
                 res.status (503).send ();

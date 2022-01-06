@@ -5,7 +5,7 @@ $(document).ready(function() {
         method: 'GET',
         success: function(resp) {
             //generate a table with a row for each server
-            resp.serverList.forEach(function(server){               
+            resp.serverList.forEach(function(server){
                 const newRow            = document.getElementById('server-table').getElementsByTagName('tbody')[0].insertRow();
                 const serverName        = newRow.insertCell(0);
                 const serverDescription = newRow.insertCell(1);
@@ -18,7 +18,7 @@ $(document).ready(function() {
         }
     });
 
-    //set profile picture element 
+    //set profile picture element
     $.ajax({
         url: '/profile',
         method: 'GET',
@@ -41,19 +41,19 @@ $(document).ready(function() {
                         title: 'Success',
                         text: 'Password Changed!',
                         allowOutsideClick: false
-                    }).then(function(){ 
+                    }).then(function(){
                         //reload page when ok is clicked
                         location.reload();
                     });
 
-                } 
+                }
                 else if (resp.status === 'fail') {
                     swal({
-                        title: 'Failed', 
+                        title: 'Failed',
                         text: resp.message,
                         type: 'error',
                         allowOutsideClick: false
-                    }).then(function(){ 
+                    }).then(function(){
                         //reload page when ok is clicked
                         location.reload();
                     });
@@ -63,5 +63,40 @@ $(document).ready(function() {
         });
     });
 
-    
+    $('#change-shell').submit(function(e){
+        e.preventDefault();
+        console.log('Changing shell');
+        $.ajax({
+            url: '/change-shell',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(resp) {
+                if (resp.status === 'success') {
+                    swal({
+                        title: 'Success',
+                        text: 'Shell Changed!',
+                        allowOutsideClick: false
+                    }).then(function(){
+                        //reload page when ok is clicked
+                        location.reload();
+                    });
+
+                }
+                else if (resp.status === 'fail') {
+                    swal({
+                        title: 'Failed',
+                        text: 'Couldn\'t change shell',
+                        type: 'error',
+                        allowOutsideClick: false
+                    }).then(function(){
+                        //reload page when ok is clicked
+                        location.reload();
+                    });
+
+                }
+            }
+        });
+    });
+
+
 });

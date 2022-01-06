@@ -97,13 +97,16 @@ head
             label Confirm New Password
             input.form-control(type='password', name='confirmPass')
           button.btn.btn-primary(type='submit') Change Password
-        form#change-pass(method='POST', action='/change-shell',style='padding: 0px 20px;')
+        br
+        form#change-shell(method='POST', action='/change-shell',style='padding: 0px 20px;')
           .form-group
             label Shell
             select(name='shell', id='shell')
-              option(value='/bin/bash') /bin/bash
-              option(value='/bin/tcsh') /bin/tcsh
-              option(value='/bin/zsh') /bin/zsh
+              each shell in shells
+                if (shell === user.loginShell)
+                  option(value=shell, selected) #{shell}
+                else
+                  option(value=shell) #{shell}
           button.btn.btn-primary(type='submit') Change Shell
 
       if(login === 'failed')

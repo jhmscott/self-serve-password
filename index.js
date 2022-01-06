@@ -18,6 +18,7 @@ const express         = require('express');
 const bodyParser      = require('body-parser');
 const cookieSession   = require('cookie-session');
 const activeDirectory = require('activedirectory2');
+const adWrite         = require ('ad');
 const ping            = require('ping');
 const fs              = require('fs');
 const buffer          = require('buffer/').Buffer;
@@ -28,6 +29,12 @@ var app               = express();
 var http              = require('http');
 const server          = http.createServer(app); // integrating express with server
 const port            = process.env.PORT;
+
+const DOMAIN_ONLY     = 0;
+const NON_DOMAIN      = 1;
+const MIXED_ENV       = 2;
+
+const LOGIN_SHELLS    = ['/bin/bash', '/bin/tcsh', '/bin/zsh'];
 
 app.set('views', [__dirname + '/templates', __dirname + '/templates/temp']);
 app.set('view engine', 'pug');
@@ -105,19 +112,40 @@ function isDomainComputer (ip, callback)
 app.get('/', function(req, resp) {
   //if user is logged in display option to change password
   if(req.session.auth) {
-    resp.render('index',  {login: 'success', user:  req.session.user})
+    resp.render('index',  {login: 'success', user:  req.session.user, shells: LOGIN_SHELLS})
   }
   else {
-    isDomainComputer (req.headers['x-forwarded-for'] || req.socket.remoteAddress, function (isDomainJoined) {
-      if (isDomainJoined)
+    switch (process.env.KERBEROS_MODE)
+    {
+      case DOMAIN_ONLY:
       {
         resp.redirect ('/kerberos');
+        break;
       }
-      else
+      case NON_DOMAIN:
+      {
+        resp.render('index', {login: null});
+        break;
+      }
+      case MIXED_ENV:
+      {
+        isDomainComputer (req.headers['x-forwarded-for'] || req.socket.remoteAddress, function (isDomainJoined) {
+          if (isDomainJoined)
+          {
+            resp.redirect ('/kerberos');
+          }
+          else
+          {
+            resp.render('index', {login: null});
+          }
+        });
+        break;
+      }
+      default:
       {
         resp.render('index', {login: null});
       }
-    });
+    }
   }
 });
 
@@ -142,7 +170,7 @@ app.get('/profile', function(req, resp){
   const ad = new activeDirectory(photoSearchConfig);
 
   //check if user is logged in firsy
-  if(req.session.auth){
+  if(req.session.auth) {
     //search for user by UPN stored in cookie
     ad.findUser(req.session.user.userPrincipalName, function(err, user) {
       if(!err) {
@@ -217,6 +245,28 @@ app.get('/get-servers', function(req, resp) {
       resp.send({serverList: servers, status: 'success'});
     }
   });
+});
+
+app.post ('/change-shell', function (req, res)
+{
+  if(req.session.auth && LOGIN_SHELLS.includes (req.body.shell))
+  {
+    const config = {
+      url: process.env.DC,
+      user: process.env.AD_USERNAME,
+      pass: process.env.AD_PASSWORD
+    };
+    const ad = new adWrite (config);
+
+    ad.user (req.session.user.userPrincipalName).update ({loginShell: req.body.shell})
+    .then (function () {res.send({status: 'success'});})
+    .catch (function (err) {console.log (err); res.send({status: 'fail'});} );
+
+  }
+  else
+  {
+    res.send({status: 'fail'});
+  }
 });
 
 server.listen(port, function(err) {

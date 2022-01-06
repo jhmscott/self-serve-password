@@ -29,6 +29,7 @@
     "kerberos": "^1.1.7",
     "mssql": "^6.0.1",
     "node-mailer": "^0.1.1",
+    "patch-package": "^6.4.7",
     "ping": "^0.2.2",
     "pug": ">=3.0.1",
     "sha1": "^1.1.1"

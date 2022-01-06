@@ -1,0 +1,14 @@
+diff --git a/node_modules/ad/src/user.js b/node_modules/ad/src/user.js
+index 3ed0f59..838c16b 100644
+--- a/node_modules/ad/src/user.js
++++ b/node_modules/ad/src/user.js
+@@ -139,7 +139,8 @@ module.exports = {
+         email: 'mail',
+         title: 'title',
+         objectClass: 'objectClass',
+-        userName: 'sAMAccountName'
++        userName: 'sAMAccountName',
++        loginShell: 'loginShell'
+       };
+ 
+       let later = [];
