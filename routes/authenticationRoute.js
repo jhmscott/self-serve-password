@@ -1,14 +1,14 @@
 /**
  * Copyright (c) 2020
  *
- * Node.JS Backend for authentication related 
+ * Node.JS Backend for authentication related
  * routes. This inlcudes login, logout and
  * password change
  *
  * @summary Auth related routes
  * @author Justin Scott <justinhmscott@gmail.com>
  *
- * Created at     : ‎2020-01-08 ‏‎15:13:48 
+ * Created at     : ‎2020-01-08 ‏‎15:13:48
  * Last modified  : 2020-02-14 15:37:37
  */
 
@@ -19,6 +19,9 @@ const fs                = require('fs');
 const pwChange          = require('ad');
 const https             = require('https');
 const sha1              = require('sha1');
+const kerberos          = require('kerberos');
+
+
 
 const userSearchConfig = {
     url: process.env.DC,
@@ -69,7 +72,7 @@ router.post('/login-api', function(req, resp) {
                 return resp.render('index',  {login: 'failed'});
             }
         });
-    })(); 
+    })();
 });
 
 //logout route
@@ -115,7 +118,7 @@ router.post('/change-pass', function(req, resp) {
                         else {
                             resp.send({status: 'fail', message: 'Leaked Password'});
                         }
-                    });                    
+                    });
                 }
                 else {
                     resp.send({status: 'fail', message: "Password Don't Match"});
@@ -129,10 +132,58 @@ router.post('/change-pass', function(req, resp) {
     })();
 });
 
+router.get ('/kerberos', function (req, res) {
+    const auth = req.get('authorization');
+    if (!auth) {
+        res.status(401).set('WWW-Authenticate', 'Negotiate').send();
+    }
+    else if (auth.lastIndexOf('Negotiate') !== 0) {
+        res.status (400, `Malformed authentication token ${auth}`).send ();
+    }
+    else
+    {
+        kerberos.initializeServer (`HTTP@${process.env.DOMAIN}`, function (err, server) {
+            if (err)
+            {
+                res.status (503).send ();
+            }
+            else
+            {
+                server.step (auth.substring('Negotiate '.length), function (err, resp)
+                {
+                    if (err)
+                    {
+                        res.status(401).set('WWW-Authenticate', 'Negotiate').send();
+                    }
+                    else
+                    {
+                        server
+                        ad.findUser(server.username, function(err, user)
+                        {
+                            if (err)
+                            {
+                                res.status (503).send ();
+                            }
+                            else
+                            {
+                                req.session.auth = true;
+                                req.session.user = user;
+                                return resp.redirect('/');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+    }
+
+});
+
 //Uses the "Have I been Pwned" API to check if the password has been leaked online
 //https://haveibeenpwned.com/API/v2
 function isPasswordSafe(passwordHash, callback) {
-    //send the first 5 digits (Hex) to the API and it returns the remaining 35 of all hashes that start with 
+    //send the first 5 digits (Hex) to the API and it returns the remaining 35 of all hashes that start with
     //the same 5 digits
     https.get('https://api.pwnedpasswords.com/range/' + passwordHash.substring(0,5), function(resp){
         let returnedHashes, data = '';

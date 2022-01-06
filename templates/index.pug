@@ -43,7 +43,7 @@ head
               | #{user.displayName}
             else
               | Login
-            a.dropdown-toggle(data-toggle='dropdown' aria-expanded='false' href='#') 
+            a.dropdown-toggle(data-toggle='dropdown' aria-expanded='false' href='#')
             .dropdown-menu(role='menu' style='width: 260px;background-color: rgb(255,255,255);height: 240px;margin: 7px;padding: 16px;')
               if(login === 'success')
                 form.form-inline(method='POST', action='/logout')
@@ -54,7 +54,7 @@ head
                     br
                     text(style="font-size:18px") #{user.title}
                     br
-                    button#login-button.btn.btn-primary(type='submit') 
+                    button#login-button.btn.btn-primary(type='submit')
                       i.fa.fa-sign-in.fa-lg.mr-1(aria-hidden='true')
                       | Logout
               else
@@ -65,7 +65,7 @@ head
                   .form-group
                     label Password
                   input.form-control(type='password', required, name='password')
-                  button#login-button.btn.btn-primary(type='submit') 
+                  button#login-button.btn.btn-primary(type='submit')
                     i.fa.fa-sign-in.fa-lg.mr-1(aria-hidden='true')
                     |Login
           ul.nav.navbar-nav.flex-nowrap.ml-auto
@@ -83,7 +83,7 @@ head
             li.nav-item.dropdown.no-arrow.mx-1(role='presentation')
               .shadow.dropdown-list.dropdown-menu.dropdown-menu-right(aria-labelledby='alertsDropdown')
             li.nav-item.dropdown.no-arrow(role='presentation')
-      
+
       if(login === 'success')
         h3.text-dark.mb-0(style='margin: 10px 0px;padding: 10px 20px;') Change Password
         form#change-pass(method='POST', action='/change-pass',style='padding: 0px 20px;')
@@ -96,7 +96,16 @@ head
           .form-group
             label Confirm New Password
             input.form-control(type='password', name='confirmPass')
-          button.btn.btn-primary(type='submit') Change
+          button.btn.btn-primary(type='submit') Change Password
+        form#change-pass(method='POST', action='/change-shell',style='padding: 0px 20px;')
+          .form-group
+            label Shell
+            select(name='shell', id='shell')
+              option(value='/bin/bash') /bin/bash
+              option(value='/bin/tcsh') /bin/tcsh
+              option(value='/bin/zsh') /bin/zsh
+          button.btn.btn-primary(type='submit') Change Shell
+
       if(login === 'failed')
         #login-error.alert.alert-danger.font-weight-bold(role='alert')
           i.fa.fa-exclamation-circle.fa-lg.mr-1(aria-hidden='true')

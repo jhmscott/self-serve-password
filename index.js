@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2020
  *
- * Node.JS Backend for non authentication related 
- * routes. 
+ * Node.JS Backend for non authentication related
+ * routes.
  *
  * @summary Non auth related routes
  * @author Justin Scott <justinhmscott@gmail.com>
  *
- * Created at     : ‎2020-01-08 ‏‎13:02:25 
+ * Created at     : ‎2020-01-08 ‏‎13:02:25
  * Last modified  : 2020-02-14 15:32:47
  */
 
@@ -21,6 +21,7 @@ const activeDirectory = require('activedirectory2');
 const ping            = require('ping');
 const fs              = require('fs');
 const buffer          = require('buffer/').Buffer;
+const dns             = require('dns');
 
 // server configurations
 var app               = express();
@@ -51,14 +52,72 @@ app.use('/bootstrap', express.static(__dirname + '/assets/bootstrap'));
 const authenticationRoutes = require('./routes/authenticationRoute');
 app.use(authenticationRoutes);
 
+function reverseLookup(ip, callback) {
+	dns.reverse(ip, function(err,domains){
+		if(!err && domains)
+    {
+      callback (domains[0]);
+    }
+    else
+    {
+      callback ("");
+    }
+	});
+}
+
+function isDomainComputer (ip, callback)
+{
+  const serverSearchConfig = {
+    url: process.env.DC,
+    baseDN: process.env.COMPUTER_OU,
+    port: 636,
+    tlsOptions: {
+        ca: [fs.readFileSync(process.env.CA_CRT)]
+    },
+    username: process.env.AD_USERNAME,
+    password: process.env.AD_PASSWORD,
+  };
+  const computerSearch = new activeDirectory(serverSearchConfig);
+
+  reverseLookup (ip, function(fqdn) {
+    const computerName = fqdn.split ('.')[0].toUpperCase();
+
+    computerSearch.find('(objectclass=*)', async function(err, results) {
+      let isDomainJoined = false;
+      if ((err) || (! results)) {
+        console.log('ERROR: ' + JSON.stringify(err));
+      }
+      else
+      {
+        results.other.forEach(function(other) {
+          //if the common name is defined, add it to the array
+          if(other.cn === computerName) {
+            isDomainJoined = true;
+          }
+        });
+      }
+      callback (isDomainJoined);
+    });
+  });
+}
+
 //main page
 app.get('/', function(req, resp) {
   //if user is logged in display option to change password
   if(req.session.auth) {
     resp.render('index',  {login: 'success', user:  req.session.user})
   }
-  else{
-    resp.render('index', {login: null});
+  else {
+    isDomainComputer (req.headers['x-forwarded-for'] || req.socket.remoteAddress, function (isDomainJoined) {
+      if (isDomainJoined)
+      {
+        resp.redirect ('/kerberos');
+      }
+      else
+      {
+        resp.render('index', {login: null});
+      }
+    });
   }
 });
 
@@ -115,7 +174,6 @@ app.get('/get-servers', function(req, resp) {
   const serverSearch = new activeDirectory(serverSearchConfig);
 
   let servers = [];
-  let numHosts = 0;
 
   console.log('getting Servers');
 
@@ -126,7 +184,7 @@ app.get('/get-servers', function(req, resp) {
       resp.send({serverList: servers, status: 'failed'});
     }
     else{
-      //Iterate through the objects 
+      //Iterate through the objects
       results.other.forEach(function(other) {
         //if the common name is defined, add it to the array
         if(other.cn !== undefined) {
@@ -137,7 +195,7 @@ app.get('/get-servers', function(req, resp) {
           });
         }
       });
-      
+
       //sort server alphabetically
       servers.sort(function(serverA,serverB){
         if(serverA.name > serverB.name) {
